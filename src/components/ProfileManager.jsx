@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { 
   getProfiles, 
   saveProfile, 
   deleteProfile, 
   setActiveProfileId, 
   ROLE_OPTIONS,
-  getRoleDetails,
-  getAuthorName 
+  getRoleDetails
 } from '../utils/storage';
 import ThemeToggle from './ThemeToggle';
 import AboutModal from './AboutModal';
@@ -17,7 +16,6 @@ import {
   Trash2, 
   ArrowLeft, 
   CheckCircle2, 
-  BookOpen, 
   Heart, 
   Info 
 } from 'lucide-react';
@@ -28,11 +26,6 @@ export default function ProfileManager({ activeProfile, onSelectProfile, onCance
   const [role, setRole] = useState('publisher');
   const [showCreateForm, setShowCreateForm] = useState(profiles.length === 0);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
-  const [authorName, setAuthorName] = useState(getAuthorName());
-
-  useEffect(() => {
-    setAuthorName(getAuthorName());
-  }, [isAboutOpen]);
 
   const handleCreate = (e) => {
     e.preventDefault();
@@ -125,7 +118,7 @@ export default function ProfileManager({ activeProfile, onSelectProfile, onCance
               title="Ver autoría y créditos"
             >
               <Heart size={13} fill="var(--primary)" />
-              <span>Creado por {authorName}</span>
+              <span>Creado por Sara</span>
             </div>
             <span className="text-muted" style={{ fontSize: '0.72rem' }}>
               🔒 100% privado en tu celular
@@ -294,16 +287,13 @@ export default function ProfileManager({ activeProfile, onSelectProfile, onCance
 
         {/* Pie de página con autoría */}
         <div className="app-footer-credit">
-          <span>Registro de Servicio • Creado con dedicación por <strong>{authorName}</strong></span>
+          <span>Registro de Servicio • Creado con dedicación por <strong>Sara</strong></span>
         </div>
 
         {/* Modal de Información y Acerca de */}
         <AboutModal 
           isOpen={isAboutOpen} 
-          onClose={() => {
-            setIsAboutOpen(false);
-            setAuthorName(getAuthorName());
-          }} 
+          onClose={() => setIsAboutOpen(false)} 
         />
 
       </div>

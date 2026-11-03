@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { getActivitiesByMonth, getServiceYearActivities, getRoleDetails, getAuthorName } from '../utils/storage';
+import { getActivitiesByMonth, getServiceYearActivities, getRoleDetails } from '../utils/storage';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { Clock, BookOpen, Users, Video, ChevronDown, PlusCircle, Award, CheckCircle, Info } from 'lucide-react';
+import { Clock, BookOpen, Users, Video, ChevronDown, PlusCircle, Award, CheckCircle, Info, FileText } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import AboutModal from './AboutModal';
 
-export default function Dashboard({ profile, onNavigate, onSwitchProfile }) {
+export default function Dashboard({ profile, onNavigate, onSwitchProfile, onExport }) {
   const [stats, setStats] = useState({
     hours: 0,
     studies: 0,
@@ -17,7 +17,6 @@ export default function Dashboard({ profile, onNavigate, onSwitchProfile }) {
   
   const [yearlyHours, setYearlyHours] = useState(0);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
-  const [authorName, setAuthorName] = useState(getAuthorName());
 
   const roleInfo = getRoleDetails(profile.role);
   const isPioneer = roleInfo.isPioneer;
@@ -193,7 +192,7 @@ export default function Dashboard({ profile, onNavigate, onSwitchProfile }) {
         </div>
       )}
 
-      {/* Botón de acción principal */}
+      {/* Botones de acción principal */}
       <button 
         className="btn btn-primary mt-2" 
         onClick={() => onNavigate('form')}
@@ -202,18 +201,25 @@ export default function Dashboard({ profile, onNavigate, onSwitchProfile }) {
         <span>Registrar Actividad de Hoy</span>
       </button>
 
-      {/* Pie de página con autoría */}
+      {onExport && (
+        <button 
+          className="btn btn-subtle-purple mt-2" 
+          onClick={() => onExport(new Date())}
+        >
+          <FileText size={19} />
+          <span>Generar Informe de Predicación (PDF)</span>
+        </button>
+      )}
+
+      {/* Pie de página con autoría fija */}
       <div className="app-footer-credit mt-4">
-        <span>Registro de Servicio • Creado con dedicación por <strong>{authorName}</strong></span>
+        <span>Registro de Servicio • Creado con dedicación por <strong>Sara</strong></span>
       </div>
 
       {/* Modal de Información y Acerca de */}
       <AboutModal 
         isOpen={isAboutOpen} 
-        onClose={() => {
-          setIsAboutOpen(false);
-          setAuthorName(getAuthorName());
-        }} 
+        onClose={() => setIsAboutOpen(false)} 
       />
     </div>
   );

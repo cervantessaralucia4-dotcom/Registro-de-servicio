@@ -153,11 +153,22 @@ export const deleteActivity = (id) => {
   localStorage.setItem(ACTIVITIES_KEY, JSON.stringify(filtered));
 };
 
+// Parsea una fecha 'YYYY-MM-DD' en hora local para evitar desfases de zona horaria (UTC)
+// que hacían que los primeros días del mes (ej. noviembre) se guardaran en el mes anterior (octubre).
+export const parseActivityDate = (dateStr) => {
+  if (!dateStr) return new Date();
+  if (typeof dateStr === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  }
+  return new Date(dateStr);
+};
+
 export const getActivitiesByMonth = (year, month, profileId) => {
   const targetId = profileId || getActiveProfileId();
   const activities = getActivities(targetId);
   return activities.filter(a => {
-    const date = new Date(a.date);
+    const date = parseActivityDate(a.date);
     return date.getFullYear() === year && date.getMonth() === month;
   });
 };
@@ -172,7 +183,7 @@ export const getServiceYearActivities = (profileId) => {
     startYear -= 1;
   }
   const startDate = new Date(startYear, 8, 1);
-  return activities.filter(a => new Date(a.date) >= startDate);
+  return activities.filter(a => parseActivityDate(a.date) >= startDate);
 };
 
 // --- Plantillas PDF ---
@@ -195,14 +206,11 @@ export const saveTheme = (theme) => {
   localStorage.setItem(THEME_KEY, theme);
 };
 
-// --- Autoría de la Aplicación ---
-const AUTHOR_KEY = 'jw_app_author';
+// --- Autoría de la Aplicación (Fija: Sara) ---
 export const getAuthorName = () => {
-  return localStorage.getItem(AUTHOR_KEY) || 'Sarit';
+  return 'Sara';
 };
 
-export const saveAuthorName = (name) => {
-  if (name && name.trim()) {
-    localStorage.setItem(AUTHOR_KEY, name.trim());
-  }
+export const saveAuthorName = () => {
+  // La autoría es fija ("Sara") y no editable
 };

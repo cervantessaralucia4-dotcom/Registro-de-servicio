@@ -1,27 +1,11 @@
-import { useState } from 'react';
-import { getAuthorName, saveAuthorName } from '../utils/storage';
-import { X, Heart, Sparkles, BookOpen, ShieldCheck, FileText, Edit3, Check } from 'lucide-react';
+import { X, Heart, Sparkles, ShieldCheck, FileText, Check } from 'lucide-react';
 
 export default function AboutModal({ isOpen, onClose }) {
-  const [authorName, setAuthorName] = useState(getAuthorName());
-  const [isEditingAuthor, setIsEditingAuthor] = useState(false);
-  const [tempAuthor, setTempAuthor] = useState(authorName);
-
   if (!isOpen) return null;
-
-  const handleSaveAuthor = (e) => {
-    e.preventDefault();
-    if (tempAuthor.trim()) {
-      saveAuthorName(tempAuthor);
-      setAuthorName(tempAuthor.trim());
-      setIsEditingAuthor(false);
-    }
-  };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={e => e.stopPropagation()}>
-        {/* Cabecera del modal */}
         {/* Banner del Logo Oficial */}
         <img 
           src="/logo.jpg" 
@@ -34,7 +18,7 @@ export default function AboutModal({ isOpen, onClose }) {
           <div className="flex-center gap-2">
             <div>
               <h2 style={{ fontSize: '1.25rem', margin: 0, fontWeight: 800 }}>Registro de Servicio</h2>
-              <span className="text-muted" style={{ fontSize: '0.75rem' }}>Versión 1.2 • Aplicación Personal</span>
+              <span className="text-muted" style={{ fontSize: '0.75rem' }}>Versión 1.3 • Aplicación Personal</span>
             </div>
           </div>
           <button 
@@ -63,7 +47,7 @@ export default function AboutModal({ isOpen, onClose }) {
             </div>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.4rem' }}>
               <FileText size={14} color="var(--primary)" style={{ marginTop: '2px', flexShrink: 0 }} />
-              <span><strong>Informe oficial inteligente:</strong> Exporta directamente sobre la plantilla oficial en PDF trasladando solo los datos necesarios.</span>
+              <span><strong>Informe oficial S-4 integrado:</strong> Genera y descarga directamente tu informe en PDF según tu asignación sin subir archivos.</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.4rem' }}>
               <ShieldCheck size={14} color="var(--success)" style={{ marginTop: '2px', flexShrink: 0 }} />
@@ -72,55 +56,25 @@ export default function AboutModal({ isOpen, onClose }) {
           </div>
         </div>
 
-        {/* Sección: Autoría de la app */}
+        {/* Sección: Autoría de la app (Fija: Sara) */}
         <div className="card" style={{ padding: '1rem', background: 'var(--input-bg)', borderColor: 'var(--primary-light)' }}>
           <div className="flex-between">
             <span style={{ fontSize: '0.82rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-muted)' }}>
               Autoría y Creación
             </span>
-            {!isEditingAuthor && (
-              <button 
-                type="button" 
-                onClick={() => { setTempAuthor(authorName); setIsEditingAuthor(true); }}
-                style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '0.78rem', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 600 }}
-              >
-                <Edit3 size={13} /> Editar nombre
-              </button>
-            )}
           </div>
 
-          {!isEditingAuthor ? (
-            <div className="mt-2" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary) 0%, var(--accent-purple) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', flexShrink: 0 }}>
-                <Heart size={18} fill="#ffffff" />
-              </div>
-              <div>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Desarrollado y creado por:</div>
-                <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--primary)' }}>
-                  {authorName}
-                </div>
+          <div className="mt-2" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary) 0%, var(--accent-purple) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', flexShrink: 0 }}>
+              <Heart size={18} fill="#ffffff" />
+            </div>
+            <div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Desarrollado y creado por:</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--primary)' }}>
+                Sara
               </div>
             </div>
-          ) : (
-            <form onSubmit={handleSaveAuthor} className="mt-2">
-              <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.3rem', display: 'block' }}>
-                Tu nombre de autoría:
-              </label>
-              <div style={{ display: 'flex', gap: '0.4rem' }}>
-                <input 
-                  type="text" 
-                  value={tempAuthor} 
-                  onChange={e => setTempAuthor(e.target.value)} 
-                  placeholder="Ej. Sarit" 
-                  autoFocus
-                  style={{ padding: '0.5rem 0.75rem', fontSize: '0.88rem' }}
-                />
-                <button type="submit" className="btn btn-primary" style={{ width: 'auto', padding: '0.5rem 1rem' }}>
-                  Guardar
-                </button>
-              </div>
-            </form>
-          )}
+          </div>
         </div>
 
         {/* Botón de cierre */}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getActivitiesByMonth, deleteActivity } from '../utils/storage';
-import { format, parseISO } from 'date-fns';
+import { getActivitiesByMonth, deleteActivity, parseActivityDate } from '../utils/storage';
+import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Edit2, Trash2, Download, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
@@ -11,7 +11,7 @@ export default function History({ profile, onEdit, onExport }) {
 
   const loadActivities = () => {
     const data = getActivitiesByMonth(currentDate.getFullYear(), currentDate.getMonth(), profile.id);
-    data.sort((a, b) => new Date(b.date) - new Date(a.date));
+    data.sort((a, b) => parseActivityDate(b.date) - parseActivityDate(a.date));
     setActivities(data);
   };
 
@@ -34,14 +34,15 @@ export default function History({ profile, onEdit, onExport }) {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
   };
 
-  const getFacetName = (f) => {
+  const getFacetName = (act) => {
     const facets = {
       casa_en_casa: 'Casa en casa',
       publica: 'Pública (Carritos)',
       informal: 'Informal',
-      cartas: 'Cartas / Teléfono'
+      cartas: 'Cartas / Teléfono',
+      otros: act.customFacet && act.customFacet.trim() ? `Otros: ${act.customFacet.trim()}` : 'Otros'
     };
-    return facets[f] || f;
+    return facets[act.facet] || act.facet;
   };
 
   // Totales del mes en el historial
@@ -103,12 +104,12 @@ export default function History({ profile, onEdit, onExport }) {
         <div className="activities-list">
           {activities.map(act => (
             <div key={act.id} className="card" style={{ padding: '1rem', marginBottom: '0.75rem' }}>
-              <div className="flex-between" style={{ marginBottom: '0.5rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border-color)' }}>
+              <div className="flex-between" style={{ marginBottom: '0.5rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border-color)', gap: '0.5rem', flexWrap: 'wrap' }}>
                 <strong style={{ fontSize: '1rem', color: 'var(--text-main)', textTransform: 'capitalize' }}>
-                  {format(parseISO(act.date), 'EEEE, dd MMMM', { locale: es })}
+                  {format(parseActivityDate(act.date), 'EEEE, dd MMMM', { locale: es })}
                 </strong>
                 <span className="profile-badge">
-                  {getFacetName(act.facet)}
+                  {getFacetName(act)}
                 </span>
               </div>
               

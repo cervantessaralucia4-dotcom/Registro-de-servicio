@@ -68,6 +68,7 @@ function App() {
               profile={profile} 
               onNavigate={navigateTo} 
               onSwitchProfile={() => navigateTo('profiles')} 
+              onExport={startExport}
             />
           )}
 
